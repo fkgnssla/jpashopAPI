@@ -8,11 +8,41 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 public class MemberApiController {
     private final MemberService memberService;
+
+    //엔티티의 값이 뿌려진다.(노출되지 말아야 할 정보까지), 엔티티가 변경되면 API의 스펙이 바뀐다. => API 스펙에 맞는 DTO를 만들어 해결해라!
+    @GetMapping("/api/v1/members")
+    public List<Member> membersV1() {
+        return memberService.findMembers();
+    }
+
+    @GetMapping("/api/v2/members")
+    public Result membersV2() {
+        List<Member> findMembers = memberService.findMembers();
+        List<MemberDto> collect = findMembers.stream().map(m -> new MemberDto(m.getName()))
+                .collect(Collectors.toList());
+
+        //그냥 List로 반환하지 않고 Result로 감싸면 Result에 다른 데이터도 넣을 수 있는 장점이 있다.
+        return new Result(collect);
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class Result<T> {
+        private T data;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class MemberDto {
+        private String name;
+    }
 
     @PostMapping("/api/v1/members")
     public CreateMemberResponse saveMemberV1 (@RequestBody @Valid Member member) {
