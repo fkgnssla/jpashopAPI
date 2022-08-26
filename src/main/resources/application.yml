@@ -16,4 +16,8 @@ spring:
       enabled: always
 logging.level:
   org.hibernate.SQL: debug
+server:
+  error:
+    include-stacktrace: always
+    include-message: always
 # org.hibernate.type: trace
