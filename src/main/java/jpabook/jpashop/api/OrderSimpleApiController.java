@@ -5,6 +5,7 @@ import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
+import jpabook.jpashop.repository.SimpleOrderQueryDto;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,6 +60,11 @@ public class OrderSimpleApiController {
 
         return simpleOrderDtos;
     }
+
+    @GetMapping("/api/v4/simple-orders")
+    public List<SimpleOrderQueryDto> ordersV4() {
+        return orderRepository.findOrderDtos();
+    } //결론: 페치조인으로 성능 최적화(V3)해보고 안 되면 DTO를 직접 조회하는 방법(V4) 사용
 
     @Data
     static class SimpleOrderDto {
