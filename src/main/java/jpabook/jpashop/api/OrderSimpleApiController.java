@@ -48,6 +48,18 @@ public class OrderSimpleApiController {
         return simpleOrderDtos;
     }
 
+    @GetMapping("/api/v3/simple-orders")
+    public List<SimpleOrderDto> ordersV3() {
+        //Order를 조회할 때 Member,Delivery도 같이 조회하여 쿼리가 1번 실행된다. => 성능 최적화
+        List<Order> orders = orderRepository.findAllWithMemberDelivery();
+        List<SimpleOrderDto> simpleOrderDtos = new ArrayList<>();
+        for(Order order : orders) {
+            simpleOrderDtos.add(new SimpleOrderDto(order)); //이때, Lazy 초기화 발생X -> 프록시가 아니기에
+        }
+
+        return simpleOrderDtos;
+    }
+
     @Data
     static class SimpleOrderDto {
         private Long orderId;

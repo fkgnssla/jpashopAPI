@@ -57,4 +57,14 @@ public class OrderRepository {
         return query.getResultList();
     }
 
+    public List<Order> findAllWithMemberDelivery() {
+        //FetchType이 Lazy인 Order의 member, delivery를 패치조인하여 Order를 가져올 때 한 번에 가져온다.
+        //가져온 member, delivery는 프록시가 아닌 실 객체이다.
+        //Fetch join이라는 기능 자체의 핵심은 연관된 엔티티를 한번에 최적화해서 조회하는 기능
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+        ).getResultList();
+    }
 }
