@@ -53,6 +53,18 @@ public class OrderApiController {
         return orderDtos;
     }
 
+    //쿼리 1번 실행
+    //페이징 불가, 컬렉션 페치 조인은 1개의 컬렉션에만 가능
+    @GetMapping("api/v3/orders")
+    public List<OrderDto> ordersV3() {
+        List<Order> orders =  orderRepository.findAllWithItem();
+        List<OrderDto> orderDtos = new ArrayList<>();
+        for (Order order : orders) {
+            orderDtos.add(new OrderDto(order));
+        }
+        return orderDtos;
+    }
+
     @Getter
     static class OrderDto {
         private Long orderId;
