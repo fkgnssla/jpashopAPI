@@ -65,6 +65,19 @@ public class OrderApiController {
         return orderDtos;
     }
 
+    //xToOne관계만 페치 조인, yml에 default_batch_fetch_size: 100 추가
+    //페이징 가능
+    //쿼리 3번 실행(order, orderItem, item)
+    @GetMapping("api/v3.1/orders")
+    public List<OrderDto> ordersV3_page() {
+        List<Order> orders =  orderRepository.findAllWithMemberDelivery();
+        List<OrderDto> orderDtos = new ArrayList<>();
+        for (Order order : orders) {
+            orderDtos.add(new OrderDto(order));
+        }
+        return orderDtos;
+    }
+
     @Getter
     static class OrderDto {
         private Long orderId;
